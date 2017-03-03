@@ -14,7 +14,7 @@ imgB = np.asarray(Image.open(sys.argv[2]))
 imgC = np.zeros(imgA.shape, dtype=np.uint8)
 for (row, col, pValue), pixelA in np.ndenumerate(imgA):
     if  np.array_equal(imgA[row][col],imgB[row][col]):
-        imgC[row][col] = [255,255,255,0]
+        imgC[row][col] = [0,0,0,0]
     else:
         imgC[row][col] = imgB[row][col]
 
