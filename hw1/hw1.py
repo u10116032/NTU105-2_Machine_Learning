@@ -7,10 +7,10 @@ Created on Sat Mar  4 13:47:20 2017
 """
 #%%
 import pandas
-import random
 import numpy as np
 import sys
 
+#%%
 data = pandas.read_csv(sys.argv[1], encoding="big5")
 
 x_data = []
@@ -36,6 +36,9 @@ for i in range(0, len(data.index), 18):
 b = 2
 w = np.array([0.00749081146757, 0.121930150312, 0.257802575574, 0.364190693063, 0.0312678995303, 0.305631459067, 0.98580021091, 0.59675082927, 0.00997674460044
 ], dtype=np.float)
+a = np.array([0.00749081146757, 0.121930150312, 0.257802575574, 0.364190693063, 0.0312678995303, 0.305631459067, 0.98580021091, 0.59675082927, 0.00997674460044
+], dtype=np.float)
+#a = np.random.random((1,9))
 
 """
 # save parameters
@@ -48,36 +51,41 @@ for elm in w:
 arg_data.close()
 """
 
-#%%
+
         
                      
 # Start Training
-# ydata = b + w * xdata 
+# ydata = b + w * xdata  + a * xdata^2
 # w = 1*9
 # xdata = 9*1
 
-iteration = 100000
+iteration = 50000
 
 b_lr = 0.0
 w_lr = 0.0
-
-b_lr_root = 1
-w_lr_root = 1
+a_lr = 0.0
 
 lambda_smooth = 0.1
 
 for i in range(iteration):
     b_grad = 0.0
     w_grad = np.zeros((1 * 9, ), dtype= np.float)
+    a_grad = np.zeros((1 * 9, ), dtype= np.float)
+
     for n in range(len(x_data)):
-        b_grad = b_grad + (-2)*float(y_data[n]- (b + np.dot(w, x_data[n])))
-        w_grad = w_grad + (-2)*float(y_data[n]- (b + np.dot(w, x_data[n]))) * x_data[n]
-    w_grad = w_grad + 2 * lambda_smooth * np.sum(w)    
+        temp = (-2)*float(y_data[n]- (b + np.dot(w, x_data[n]) + np.dot(a, x_data[n]**2)))
+        b_grad = b_grad + temp
+        w_grad = w_grad + temp * x_data[n]
+        a_grad = a_grad + temp * x_data[n]**2
+    w_grad = w_grad + 2 * lambda_smooth * w   
+    a_grad = a_grad + 2 * lambda_smooth * a
     print(str((i+1)*100/iteration) + '%, ' + str(b_grad) )    
     b_lr = b_lr + b_grad**2
-    w_lr = w_lr + w_grad**2    
+    w_lr = w_lr + w_grad**2
+    a_lr = a_lr + a_grad**2    
     b = b - 1/np.sqrt(b_lr) * b_grad
     w = w - 1/np.sqrt(w_lr) * w_grad
+    a = a - 1/np.sqrt(a_lr) * a_grad
 
 
 # Test Data Handling
@@ -97,7 +105,7 @@ for i in range(0, len(TestData.index), 18):
 
 #Test Data
 for i in range(len(test_input)):
-    predict_elm = int(b+ np.dot(w, test_input[i]))
+    predict_elm = int(b + np.dot(w, test_input[i]) + np.dot(a, test_input[i]**2))
     if predict_elm >=0:
         test_output.append(predict_elm)
     else:
@@ -112,7 +120,5 @@ for i in range(len(test_output)):
     df.loc[i,'value']=test_output[i]
     
 df.to_csv(sys.argv[3], sep=',', index=False)
-
-
 
 
