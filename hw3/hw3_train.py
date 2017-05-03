@@ -153,9 +153,6 @@ datagen = ImageDataGenerator(featurewise_center=False,
                             featurewise_std_normalization=False, 
                             width_shift_range=0.1,
                             height_shift_range=0.1,
-                            zoom_range=0.2,
-                            shear_range=0.1,
-                            rotation_range=10.,
                             horizontal_flip=True)
 
 datagen.fit(x_train)
@@ -193,7 +190,7 @@ model.add(Dropout(0.1))
 model.add(Dense(units=7,activation='softmax'))
 model.summary()
 
-model.compile(loss='categorical_crossentropy',optimizer="adam",metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy',optimizer="adadelta",metrics=['accuracy'])
 #model.fit(x_train,y_train,batch_size=400,epochs=200,validation_split=0.1, shuffle=True)
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=50),
                             samples_per_epoch=x_train.shape[0],
@@ -205,7 +202,7 @@ print ('\nTrain Acc:', score[1])
 predict_result = model.predict_classes(x_test, batch_size=200)
 predict_result_prob = model.predict_proba(x_test, batch_size=200)
 
-model.save('Final_Model.h5')
+model.save('Final_Model_v3.h5')
 
 #%%
 #Output Predict Data

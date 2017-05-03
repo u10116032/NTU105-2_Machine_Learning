@@ -28,7 +28,7 @@ for i in range(test_data.shape[0]):
 x_test = np.array(x_test)    
 
 #%%
-model = load_model('./Final_Model.h5')
+model = load_model('./Final_Model_v3.h5')
 
 predict_result = model.predict_classes(x_test, batch_size=50)
 #predict_result_prob = model.predict_proba(x_test, batch_size=50)
