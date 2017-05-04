@@ -26,9 +26,9 @@ import matplotlib.pyplot as plt
 #%%
 x_val=[]
 y_val=[]
-train_data = pandas.read_csv(sys.argv[1]) #training data
+train_data = pandas.read_csv('train.csv') #training data
 
-for i in range(0,4000):
+for i in range(0,2000):
     temp = np.array(list(map(int, train_data.loc[i, 'feature'].split())))
     temp = temp.reshape(48,48,1)
     x_val.append(temp)
@@ -62,7 +62,7 @@ def plot_confusion_matrix(cm, classes,
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     
-model = load_model('./Final_Model.h5')
+model = load_model('./Final_Model_v3.h5')
 #plot_model(model, to_file='model.png')
 
 predict_result = model.predict_classes(x_val, batch_size=200)
@@ -70,6 +70,6 @@ conf_mat = confusion_matrix(np.argmax(y_val, axis=1),predict_result)
 print(conf_mat)
 plt.figure()
 plot_confusion_matrix(conf_mat, classes=["Angry","Disgust","Fear","Happy","Sad","Surprise","Neutral"])
-plt.savefig('confusion matrix.png')
+#plt.savefig('confusion matrix.png')
 plt.show()
 
