@@ -25,6 +25,7 @@ print('load model finished')
 result = model.predict([test_userid, test_movieid, test_userid, test_movieid]).flatten()
 
 print('predict finish, start writing to csv.')
+'''
 for i in range(len(result)):   
     temp = result[i]
     if temp < 0:
@@ -35,4 +36,14 @@ for i in range(len(result)):
     df.loc[i,'Rating'] = temp
     #print("test data[",i,"]: ",temp)
 df.to_csv(sys.argv[2], sep=',', index=False)
+'''
+with open(sys.argv[2], 'w') as file:
+    file.write('TestDataID,Rating\n')
+    for i in range(len(result)):
+        temp = result[i]
+        if temp < 0:
+            temp = 0
+        if temp > 5:
+            temp = 5
+        file.write(str(i+1)+','+str(temp)+'\n')
 
