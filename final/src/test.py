@@ -98,8 +98,8 @@ prediction_5 = clf_5.predict(test[column_labels_rf])
 ############# Hard Label Majority Vote ############
 
 
-hard_label_final = np.zeros((14850,3), dtype= int)
-for i in range(14850):
+hard_label_final = np.zeros((test.shape[0],3), dtype= int)
+for i in range(test.shape[0]):
     hard_label_final[i, result_1[i]] += 1
     hard_label_final[i, result_2[i]] += 1
     hard_label_final[i, result_3[i]] += 1
