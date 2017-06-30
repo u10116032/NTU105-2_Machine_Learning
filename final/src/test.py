@@ -18,6 +18,7 @@ date_weight = [365,30,1]
 
 #%%
 ##############################feature processing part##############################
+train = pd.read_csv("../pre_train_data.csv")
 test = pd.read_csv("../pre_test.csv")
 test = test.fillna(test.median())
 
@@ -43,6 +44,11 @@ def date_preprocess(dataframe, stat='training'):
     if stat == 'training':
         dataframe["date_recorded"] = (dataframe["date_recorded"] - min_date).astype(int)
     return dataframe, min_date
+
+########## date_recorded for trainig data ##########
+
+train, min_date = date_preprocess(train,stat='training')
+print("Features date_recorded for training: successfully")
 
 ########## date_recorded for testing data ##########
 
